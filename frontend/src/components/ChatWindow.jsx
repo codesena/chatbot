@@ -18,7 +18,7 @@ export default function ChatWindow() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/ai", {
+      const res = await fetch("https://chatbot-60i9.onrender.com/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
