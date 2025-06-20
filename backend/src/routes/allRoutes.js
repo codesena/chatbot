@@ -6,7 +6,7 @@ import { loginUser, registerUser } from "../controllers/authControllers.js";
 
 const allRoutes = express.Router();
 
-allRoutes.post("/handleAIMessage", handleAIMessage);
+allRoutes.post("/ai", handleAIMessage);
 allRoutes.post("/cancel", cancelOrder);
 allRoutes.get("/:order_id", getOrderStatus);
 allRoutes.post("/signup", registerUser);
