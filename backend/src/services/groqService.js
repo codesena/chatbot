@@ -42,7 +42,7 @@ User intent mapping rules:
   { "command": "requestCancellation" }
 
 - If the user says:
-  "show my orders", "list my orders", "what did I buy", "my past orders", "see my orders", "orders I placed", then return:
+  "show my orders", "list my orders", "what did I buy", "my past orders", "see my orders", "orders I placed"," all my order details","all orders", then return:
   { "command": "listOrders" }
 
 - If the user says:
