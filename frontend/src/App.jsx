@@ -8,6 +8,7 @@ import {
 import ChatWindow from "./components/ChatWindow";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
+import { Analytics } from "@vercel/analytics/next";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
         </Routes>
       </Router>
+      <Analytics />
     </div>
   );
 };

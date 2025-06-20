@@ -22,7 +22,7 @@ export default function ChatWindow() {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/ai`,
-        { message: input },
+        { message: input, userId: localStorage.getItem("userId") },
         {
           headers: { "Content-Type": "application/json" },
         }

@@ -14,7 +14,6 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/signup`,
-        // "http://localhost:5000/signup",
         {
           name,
           email,
