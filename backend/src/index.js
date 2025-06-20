@@ -1,9 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import aiRoutes from "./routes/aiRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-import cancelRoutes from "./routes/cancelRoutes.js";
+import allRoutes from "./routes/allRoutes.js";
 import { connectDB } from "./db.js";
 
 dotenv.config();
@@ -17,12 +15,9 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-app.use(express.json());
 connectDB();
-app.use("/ai", aiRoutes);
-app.use("/orders", orderRoutes);
-app.use("/cancel", cancelRoutes);
+app.use(express.json());
+app.use("/", allRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {
