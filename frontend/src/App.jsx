@@ -8,7 +8,7 @@ import {
 import ChatWindow from "./components/ChatWindow";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
   return (
