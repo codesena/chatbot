@@ -94,6 +94,7 @@ Write a friendly message.`;
 
   const rawCommand = await getCommandFromAI(message);
   const command = extractJSONCommand(rawCommand);
+
   if (!command) return { reply: "Sorry, I couldn’t understand your request." };
 
   if (command.command === "greet") {
@@ -107,7 +108,9 @@ Write a friendly message.`;
     const orders = await Order.find({ userId });
     if (!orders.length) return { reply: "You have no orders yet." };
 
-    const returns = await ReturnRequest.find({});
+    const returns = await ReturnRequest.find({
+      order_id: { $in: orders.map((o) => o._id) },
+    });
     const returnMap = new Map();
     returns.forEach((r) => returnMap.set(r.order_id.toString(), r));
 
@@ -120,62 +123,6 @@ Write a friendly message.`;
 
     return {
       reply: `Here are your orders:\n\n${lines.join("\n")}`,
-    };
-  }
-
-  if (command.command === "cancelOrder") {
-    let { order_id, reason } = command;
-
-    if (!order_id && activeOrderId) {
-      order_id = activeOrderId;
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(order_id)) {
-      return { reply: "Invalid or missing order ID." };
-    }
-
-    const order = await Order.findById(order_id);
-    if (!order || order.userId.toString() !== userId) {
-      return { reply: "Order not found or doesn't belong to you." };
-    }
-
-    const existing = await ReturnRequest.findOne({ order_id: order._id });
-    if (existing) {
-      return {
-        reply: `A return request already exists.\n\nReturn ID: ${existing._id}\nInstructions: ${existing.instructions}`,
-      };
-    }
-
-    if (
-      !reason ||
-      reason.toLowerCase().includes("cancel") ||
-      reason.toLowerCase().includes("help")
-    ) {
-      activeOrderMap.set(userId, order_id);
-      pendingReasonMap.set("awaiting_reason", order_id);
-      return {
-        reply: "Please tell me the reason for cancelling your order.",
-      };
-    }
-
-    confirmationMap.set("awaiting_confirmation", order_id);
-    return {
-      reply: `You want to cancel order ${order_id} for: "${reason}". Please type 'Yes' to confirm or 'No' to abort.`,
-    };
-  }
-
-  if (command.command === "requestCancellation") {
-    const orders = await Order.find({ userId });
-    if (!orders.length) return { reply: "You have no orders to cancel." };
-
-    const lines = orders.map(
-      (o) => `• ${o._id} — ${o.status} (${o.items.length} items)`
-    );
-
-    return {
-      reply: `Sure. Please provide the Order ID you want to cancel.\n\nHere are your orders:\n\n${lines.join(
-        "\n"
-      )}`,
     };
   }
 
