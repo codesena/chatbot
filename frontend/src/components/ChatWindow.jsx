@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import MessageBubble from "./MessageBubble";
 import InputBox from "./InputBox";
 
@@ -8,6 +9,7 @@ export default function ChatWindow() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -18,15 +20,16 @@ export default function ChatWindow() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://chatbot-60i9.onrender.com/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/ai`,
+        { message: input },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-      const data = await res.json();
       const botMessage = {
-        text: data.reply || "No response received.",
+        text: res.data.reply || "No response received.",
         isUser: false,
       };
 
@@ -44,6 +47,10 @@ export default function ChatWindow() {
     }
   };
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="flex flex-col h-screen">
       <div className="flex-grow overflow-y-auto p-4 space-y-2 bg-gray-50">
@@ -51,6 +58,7 @@ export default function ChatWindow() {
           <MessageBubble key={i} text={m.text} isUser={m.isUser} />
         ))}
         {loading && <MessageBubble text="Typing..." isUser={false} />}
+        <div ref={bottomRef} />
       </div>
       <InputBox
         value={input}
