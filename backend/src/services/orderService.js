@@ -140,6 +140,16 @@ Write a friendly message.`;
       return { reply: "No order found with the given ID." };
     }
 
+    const returnRequest = await ReturnRequest.findOne({
+      order_id: command.order_id,
+    });
+
+    if (returnRequest) {
+      return {
+        reply: `Order ${command.order_id} has been CANCELLED.\n\nReturn ID: ${returnRequest._id}\nInstructions: ${returnRequest.instructions}`,
+      };
+    }
+
     const { _id, status, eta, items, createdAt } = orderDetails;
 
     const formattedItems = items
@@ -148,11 +158,11 @@ Write a friendly message.`;
 
     return {
       reply: `Order Details:
-      • Order ID: ${_id}
-      • Status: ${status}
-      • ETA: ${eta}
-      • Items: ${formattedItems},
-      • Created On: ${new Date(createdAt).toLocaleDateString()}`,
+        • Order ID: ${_id}
+        • Status: ${status}
+        • ETA: ${eta}
+        • Items:\n${formattedItems}
+        • Created On: ${new Date(createdAt).toLocaleDateString()}`,
     };
   }
 
