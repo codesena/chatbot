@@ -19,12 +19,28 @@ export const getCommandFromAI = async (userMessage) => {
   { "command": "cancelOrder", "order_id": "...", "reason": "..." }
   { "command": "cancelOrder", "order_id": "..." }
   { "command": "listOrders" }
+  { "command": "requestCancellation" }
+  { "command": "confirmCancellation", "confirm": "yes" }
   { "command": "unknown" }
   
   If user says: "I want to return it 6853...", return:
   { "command": "cancelOrder", "order_id": "6853..." }
-  If user says: "show my orders", "list my orders", return:
+  If user says something like: "show my orders", "list my orders", "my orders", "what have I ordered", "all orders", return:
   { "command": "listOrders" }
+  If user says something like: "I need help cancelling an order", return:
+  { "command": "requestCancellation" }
+  If user says something like: "Yes", "Yes please", etc., after being asked for confirmation, return:
+  { "command": "confirmCancellation", "confirm": "yes" }
+  If user says: "track order", "check order status", followed by an ID like 6853..., return:
+  { "command": "getOrderStatus", "order_id": "6853..." }
+  If user says: "cancel my order 6853...", return:
+  { "command": "cancelOrder", "order_id": "6853..." }
+  If user says: "cancel one of my orders" or "cancel an order I placed", return:
+  { "command": "requestCancellation" }
+  If user says something vague like "I need help" or "what can you do", return:
+  { "command": "greet" }
+  If no clear match, return:
+  { "command": "unknown" }
   
   Return only the JSON.`,
       },
