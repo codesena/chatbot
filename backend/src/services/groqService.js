@@ -14,35 +14,54 @@ export const getCommandFromAI = async (userMessage) => {
       {
         role: "system",
         content: `
-  Extract one of:
-  { "command": "getOrderStatus", "order_id": "..." }
-  { "command": "cancelOrder", "order_id": "...", "reason": "..." }
-  { "command": "cancelOrder", "order_id": "..." }
-  { "command": "listOrders" }
-  { "command": "requestCancellation" }
-  { "command": "confirmCancellation", "confirm": "yes" }
-  { "command": "unknown" }
-  
-  If user says: "I want to return it 6853...", return:
-  { "command": "cancelOrder", "order_id": "6853..." }
-  If user says something like: "show my orders", "list my orders", "my orders", "what have I ordered", "all orders", return:
-  { "command": "listOrders" }
-  If user says something like: "I need help cancelling an order", return:
-  { "command": "requestCancellation" }
-  If user says something like: "Yes", "Yes please", etc., after being asked for confirmation, return:
-  { "command": "confirmCancellation", "confirm": "yes" }
-  If user says: "track order", "check order status", followed by an ID like 6853..., return:
+Extract one of:
+{ "command": "getOrderStatus", "order_id": "..." }
+{ "command": "cancelOrder", "order_id": "...", "reason": "..." }
+{ "command": "cancelOrder", "order_id": "..." }
+{ "command": "listOrders" }
+{ "command": "requestCancellation" }
+{ "command": "confirmCancellation", "confirm": "yes" }
+{ "command": "unknown" }
+
+User intent mapping rules:
+
+- If the user says: 
+  "track order", "check status", "check my order", "where is my order", "order update", followed by an order ID like 6853..., then return:
   { "command": "getOrderStatus", "order_id": "6853..." }
-  If user says: "cancel my order 6853...", return:
+
+- If the user says: 
+  "cancel my order 6853...", "return order 6853...", "initiate return for 6853...", then return:
   { "command": "cancelOrder", "order_id": "6853..." }
-  If user says: "cancel one of my orders" or "cancel an order I placed", return:
+
+- If the user says:
+  "cancel my order 6853... because it's damaged", "cancel 6853..., it was a mistake", etc., then return:
+  { "command": "cancelOrder", "order_id": "6853...", "reason": "..." }
+
+- If the user says:
+  "I want to return an item", "how to cancel my order", "can you cancel for me", "I changed my mind", then return:
   { "command": "requestCancellation" }
-  If user says something vague like "I need help" or "what can you do", return:
+
+- If the user says:
+  "show my orders", "list my orders", "what did I buy", "my past orders", "see my orders", "orders I placed", then return:
+  { "command": "listOrders" }
+
+- If the user says:
+  "Yes", "yes please", "go ahead", "confirm it", "do it", "proceed", "confirm cancellation", after being asked to confirm, return:
+  { "command": "confirmCancellation", "confirm": "yes" }
+
+- If the user says:
+  "Hello", "Hi", "Hey", "Greetings", "Howdy", return:
   { "command": "greet" }
-  If no clear match, return:
+
+- If the user says:
+  "I need help", "what can you do", "options?", "assist me", "help", return:
+  { "command": "greet" }
+
+- If the input doesn't match anything clearly, return:
   { "command": "unknown" }
-  
-  Return only the JSON.`,
+
+Return only the JSON.
+`,
       },
       { role: "user", content: userMessage },
     ],

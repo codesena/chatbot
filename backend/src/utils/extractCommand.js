@@ -1,5 +1,7 @@
 export const extractJSONCommand = (rawText) => {
   const jsonMatch = rawText.match(/\{[\s\S]*?\}/);
+  console.log("jsonMatch", jsonMatch);
+
   if (!jsonMatch) return null;
 
   try {

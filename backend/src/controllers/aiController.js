@@ -1,4 +1,3 @@
-// import { handleMessageLogic } from "../services/orderService.js";
 import { handleMessageLogic } from "../services/orderService.js";
 
 export const handleAIMessage = async (req, res) => {
